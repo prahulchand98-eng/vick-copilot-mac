@@ -1,0 +1,66 @@
+{
+  "name": "vick-copilot-mac",
+  "version": "1.0.0",
+  "description": "VickCareer Stealth Interview Copilot (macOS)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:mac": "electron-builder --mac",
+    "build:dir": "electron-builder --dir",
+    "release": "electron-builder --mac --publish always"
+  },
+  "author": "",
+  "license": "MIT",
+  "build": {
+    "appId": "com.vickcopilot.app",
+    "productName": "VickCopilot",
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "title": "${productName} ${version}",
+      "window": {
+        "width": 540,
+        "height": 380
+      }
+    },
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "**/*",
+      "!**/{.git,.gitignore,.vscode,docs,test,__tests__}",
+      "!*.md"
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "prahulchand98-eng",
+      "repo": "vick-copilot-mac"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "dependencies": {
+    "@deepgram/sdk": "^5.0.0",
+    "electron-updater": "^6.8.3",
+    "express": "^5.2.1",
+    "mic": "^2.1.2",
+    "node-record-lpcm16": "^1.0.1"
+  }
+}

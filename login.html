@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VickCopilot — Sign In</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #080c14;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Ambient glow background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(124, 58, 237, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -150px; left: 10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(ellipse, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card {
+      position: relative;
+      width: 380px;
+      padding: 40px 36px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.02) inset;
+    }
+
+    /* Brand */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .brand-logo {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; font-weight: 900; color: #fff;
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+    }
+    .brand-name { font-size: 17px; font-weight: 700; color: #f1f5f9; letter-spacing: -0.3px; }
+    .brand-tag { font-size: 11px; color: #64748b; font-weight: 400; }
+
+    /* Heading */
+    .heading { font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.4px; margin-bottom: 4px; }
+    .subheading { font-size: 13px; color: #64748b; margin-bottom: 28px; }
+
+    /* Form fields */
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; letter-spacing: 0.3px; text-transform: uppercase; }
+    .field input {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #f1f5f9;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+    .field input::placeholder { color: #475569; }
+    .field input:focus {
+      border-color: rgba(124, 58, 237, 0.6);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Options row */
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 6px 0 22px;
+    }
+    .remember-label {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 13px; color: #64748b; cursor: pointer;
+    }
+    .remember-label input[type="checkbox"] { accent-color: #7c3aed; width: 14px; height: 14px; }
+    .forgot-link { font-size: 13px; color: #7c3aed; text-decoration: none; transition: color 0.2s; }
+    .forgot-link:hover { color: #a78bfa; }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 0.2px;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
+    }
+    .submit-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Divider */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0;
+      color: #334155; font-size: 12px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: rgba(255,255,255,0.07);
+    }
+
+    /* Status message */
+    #message {
+      margin-top: 14px;
+      font-size: 13px;
+      text-align: center;
+      min-height: 18px;
+      color: #fca5a5;
+    }
+    #message.success { color: #6ee7b7; }
+
+    /* Footer note */
+    .footer-note {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: #475569;
+    }
+    .footer-note a { color: #7c3aed; text-decoration: none; }
+    .footer-note a:hover { text-decoration: underline; }
+
+    /* Security badge */
+    .security-badge {
+      display: flex; align-items: center; justify-content: center;
+      gap: 5px; margin-top: 20px;
+      font-size: 11px; color: #334155;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">
+      <div class="brand-logo">V</div>
+      <div>
+        <div class="brand-name">VickCopilot</div>
+        <div class="brand-tag">AI Interview Assistant</div>
+      </div>
+    </div>
+
+    <h1 class="heading">Welcome back</h1>
+    <p class="subheading">Sign in to your account to continue</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required />
+      </div>
+
+      <div class="options">
+        <label class="remember-label">
+          <input type="checkbox" id="rememberMe" />
+          Remember me
+        </label>
+        <a href="#" class="forgot-link" id="forgotPassword">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="submit-btn" id="loginBtn">Sign In</button>
+      <p id="message"></p>
+    </form>
+
+    <div class="security-badge">
+      🔒 Secured with end-to-end encryption
+    </div>
+
+    <div class="footer-note">
+      Don't have an account? <a href="https://vick-copilot-web-ltf5.vercel.app/signup" id="signupLink">Sign up free</a>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    var el = document.getElementById('signupLink');
+    if (el && typeof WEB_API_URL !== 'undefined') el.href = WEB_API_URL + '/signup';
+  </script>
+  <script src="login.js"></script>
+</body>
+</html>

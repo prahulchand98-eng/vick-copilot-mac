@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VicksAI Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      text-align: center;
+      background: rgba(255,255,255,0.08);
+      padding: 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Welcome to VicksAI</h1>
+    <p id="userInfo">Loading user...</p>
+    <p id="providerInfo"></p>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <script>
+    const userInfo = document.getElementById("userInfo");
+    const providerInfo = document.getElementById("providerInfo");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const user = JSON.parse(localStorage.getItem("vicksai_user") || "null");
+
+    if (user) {
+      userInfo.textContent = `Logged in as ${user.name} (${user.email})`;
+      providerInfo.textContent = user.provider
+        ? `Signed in with ${user.provider}`
+        : "Signed in with Email/Password";
+    } else {
+      userInfo.textContent = "No active session found.";
+      providerInfo.textContent = "";
+    }
+
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("vicksai_token");
+      localStorage.removeItem("vicksai_user");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

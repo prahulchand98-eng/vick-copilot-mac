@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VickCopilot — Setup</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      padding: 30px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    .logo {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: bold; font-size: 16px;
+    }
+    .title { font-size: 22px; font-weight: 700; }
+    .title span { color: #10b981; }
+    .badge {
+      background: #dcfce7;
+      color: #16a34a;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 8px;
+    }
+    .logout-btn {
+      margin-left: auto;
+      padding: 6px 12px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .logout-btn:hover {
+      background: #dc2626;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .input-group { margin-bottom: 0; }
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: none;
+      background: white;
+      transition: border-color 0.2s;
+    }
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    .prompt-toggle {
+      font-size: 12px;
+      color: #94a3b8;
+      cursor: pointer;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .prompt-toggle:hover { color: #64748b; }
+    .hidden { display: none; }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      align-items: stretch;
+    }
+    .launch-btn {
+      flex: 1;
+      padding: 14px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .launch-btn:hover {
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+      transform: translateY(-2px);
+    }
+    .free-btn {
+      padding: 14px 16px;
+      background: rgba(99,102,241,0.15);
+      color: #a5b4fc;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    .free-btn:hover { background: rgba(99,102,241,0.25); }
+    .free-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .word-count { font-size: 10px; color: #64748b; text-align: right; margin-top: 3px; }
+    .word-count.over { color: #f87171; }
+    .file-upload-label {
+      font-size: 11px; color: #64748b; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 3px; margin-left: 6px;
+    }
+    .file-upload-label:hover { color: #94a3b8; }
+    .area-label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .stealth-note {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .stealth-note span { color: #10b981; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">V</div>
+    <div class="title">Vick<span>Copilot</span></div>
+    <div class="badge">Stealth Mode</div>
+    <span id="creditDisplay" style="font-size:12px;font-weight:600;color:#10b981;margin-left:8px;"></span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="grid">
+    <div class="input-group">
+      <div class="area-label">
+        <label>📋 Job Description</label>
+        <label class="file-upload-label" title="Upload .txt file">
+          ⬆ Upload
+          <input type="file" accept=".txt,.md" style="display:none" onchange="loadFile(this,'jobDescription')">
+        </label>
+      </div>
+      <textarea id="jobDescription" rows="12" placeholder="Paste job description..." oninput="updateWordCount('jobDescription','jdCount')"></textarea>
+      <div class="word-count" id="jdCount">0 / 7,000 words</div>
+    </div>
+    <div class="input-group">
+      <div class="area-label">
+        <label>📄 Your Resume</label>
+        <label class="file-upload-label" title="Upload .txt file">
+          ⬆ Upload
+          <input type="file" accept=".txt,.md" style="display:none" onchange="loadFile(this,'resumeText')">
+        </label>
+      </div>
+      <textarea id="resumeText" rows="12" placeholder="Paste your resume..." oninput="updateWordCount('resumeText','resumeCount')"></textarea>
+      <div class="word-count" id="resumeCount">0 / 7,000 words</div>
+    </div>
+  </div>
+
+  <div class="prompt-toggle" onclick="document.getElementById('promptBox').classList.toggle('hidden')">
+    ⚙️ Custom Prompt <span id="promptStatus" style="color:#94a3b8; font-size:11px; margin-left:4px;">Using default</span>
+  </div>
+  <div id="promptBox" class="hidden" style="margin-bottom:12px;">
+    <textarea id="customPrompt" rows="3" placeholder="Enter custom prompt (min 8 words)..." oninput="checkPrompt()"></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button class="launch-btn" onclick="launch(false)">🚀 Start Session</button>
+    <button class="free-btn" id="freeBtn" onclick="launch(true)">🎁 Free 5-min Session</button>
+  </div>
+  <p class="stealth-note">🛡️ <span>Invisible during screen share</span> • Always on top • Cannot be detected</p>
+
+  <script src="config.js"></script>
+  <script src="setup.js"></script>
+  
+  <script>
+    const token = localStorage.getItem("copilot_token");
+    if (!token) {
+      window.location.href = "login.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("copilot_token");
+      localStorage.removeItem("copilot_user");
+      localStorage.removeItem("copilot_anthropic_key");
+      localStorage.removeItem("copilot_deepgram_key");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
